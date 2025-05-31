@@ -60,7 +60,7 @@ The geometric series $sum_(n=0)^∞ r^n$ converges if and only if $|r| < 1$.
 
 $ k < (1 + R)^(Y_c) $
 
-*Proof:* The series converges ⟺ $|r| < 1$ ⟺ $|k / (1 + R)^(Y_c)| < 1$ ⟺ $k < (1 + R)^(Y_c)$ (since $k > 0$ and $(1 + R)^(Y_c) > 0$). □
+*Proof:* The series converges $<=> |r| < 1$ <=> $|k / (1 + R)^(Y_c)| < 1$ <=> $k < (1 + R)^(Y_c)$ (since $k > 0$ and $(1 + R)^(Y_c) > 0$). □
 
 === Closed-Form Solution
 

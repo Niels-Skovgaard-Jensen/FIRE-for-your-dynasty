@@ -121,18 +121,50 @@ class DynastyFIRE:
 
         for n in range(max_generations):
             years = self.Y + n * self.Y_c
-            investment = self.M * (children_per_generation**n) / ((1 + self.R) ** years)
-            investments.append(investment)
-            running_total += investment
-            cumulative.append(running_total)
+            try:
+                # Check for potential overflow before calculation
+                term = children_per_generation**n
+                discount = (1 + self.R) ** years
+                
+                # Prevent overflow by checking if numbers are getting too large
+                if term > 1e100 or discount > 1e100:
+                    # If we're here, the series is likely diverging
+                    break
+                    
+                investment = self.M * term / discount
+                
+                # Additional check for extremely large values
+                if investment > 1e50:
+                    break
+                    
+                investments.append(investment)
+                running_total += investment
+                cumulative.append(running_total)
+                
+            except (OverflowError, ZeroDivisionError):
+                # Handle overflow - series is diverging
+                break
 
         # Calculate theoretical infinite sum if convergent
         infinite_sum = None
         if converges:
-            # Sum = a / (1 - r) where a = first term, r = common ratio
-            a = self.M / ((1 + self.R) ** self.Y)
-            r = children_per_generation / ((1 + self.R) ** self.Y_c)
-            infinite_sum = a / (1 - r)
+            try:
+                # Sum = a / (1 - r) where a = first term, r = common ratio
+                a = self.M / ((1 + self.R) ** self.Y)
+                r = children_per_generation / ((1 + self.R) ** self.Y_c)
+                
+                # Additional check: if r is very close to 1, the sum may be unstable
+                if abs(1 - r) < 1e-10:
+                    # Series converges but very slowly - numerical instability
+                    infinite_sum = None
+                    converges = False  # Mark as practically non-convergent
+                else:
+                    infinite_sum = a / (1 - r)
+                    
+            except (OverflowError, ZeroDivisionError):
+                # Numerical issues - treat as divergent
+                infinite_sum = None
+                converges = False
 
         return {
             "converges": converges,
@@ -357,11 +389,7 @@ def main(cfg: DictConfig) -> dict[str, Any] | None:
             max_generations=cfg.analysis.max_generations,
         )
         status = "CONVERGES" if analysis["converges"] else "DIVERGES"
-        final_cost = (
-            analysis["infinite_sum"]
-            if analysis["infinite_sum"]
-            else analysis["final_cumulative"]
-        )
+        final_cost = analysis["infinite_sum"] if analysis["converges"] else None
 
         results[children] = {
             "converges": analysis["converges"],
@@ -373,9 +401,14 @@ def main(cfg: DictConfig) -> dict[str, Any] | None:
             description = (
                 f"{children} child{'ren' if children > 1 else ''} per generation"
             )
-            print(
-                f"{description}: {status} - Cost: {final_cost:,.{cfg.output.decimal_places}f} {cfg.output.currency}"
-            )
+            if analysis["converges"]:
+                print(
+                    f"{description}: {status} - Cost: {final_cost:,.{cfg.output.decimal_places}f} {cfg.output.currency}"
+                )
+            else:
+                print(
+                    f"{description}: {status} - Cost: ∞ (infinite)"
+                )
 
     # Generate visualization if enabled
     if cfg.visualization.show_plots or cfg.visualization.save_plots:
@@ -424,7 +457,10 @@ def main(cfg: DictConfig) -> dict[str, Any] | None:
         
         f.write("Scenario Analysis:\n")
         for children, result in results.items():
-            f.write(f"  {children} children per generation: {result['status']} - {result['cost']:,.0f} {cfg.output.currency}\n")
+            if result['converges']:
+                f.write(f"  {children} children per generation: {result['status']} - {result['cost']:,.0f} {cfg.output.currency}\n")
+            else:
+                f.write(f"  {children} children per generation: {result['status']} - ∞ (infinite)\n")
     
     if cfg.output.verbose:
         print(f"Summary report saved to {summary_file}")
