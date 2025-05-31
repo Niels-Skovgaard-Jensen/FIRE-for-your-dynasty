@@ -6,7 +6,9 @@ from pathlib import Path
 from dataclasses import dataclass, field
 import hydra
 from hydra.core.config_store import ConfigStore
+from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
+import json
 
 
 @dataclass
@@ -257,8 +259,9 @@ class DynastyFIRE:
         plt.tight_layout()
 
         if self.config.visualization.save_plots:
-            output_dir = Path(self.config.visualization.output_dir)
-            output_dir.mkdir(exist_ok=True)
+            # Use Hydra's output directory
+            hydra_cfg = HydraConfig.get()
+            output_dir = Path(hydra_cfg.runtime.output_dir)
             plt.savefig(
                 output_dir / "dynasty_analysis.png", dpi=300, bbox_inches="tight"
             )
@@ -380,13 +383,54 @@ def main(cfg: DictConfig) -> dict[str, Any] | None:
             print("\nGenerating visualization...")
         dynasty.visualize_dynasty_growth()
 
-    # Return results for programmatic use
-    return {
+    # Prepare results for output
+    final_results = {
         "single_child_investment": single_investment,
         "convergence_analysis": convergence,
         "scenario_results": results,
-        "config": cfg,
+        "config": OmegaConf.to_container(cfg, resolve=True),
     }
+    
+    # Save results to Hydra output directory
+    hydra_cfg = HydraConfig.get()
+    output_dir = Path(hydra_cfg.runtime.output_dir)
+    
+    # Save detailed results as JSON
+    results_file = output_dir / "dynasty_results.json"
+    with open(results_file, 'w') as f:
+        json.dump(final_results, f, indent=2, default=str)
+    
+    if cfg.output.verbose:
+        print(f"\nResults saved to {results_file}")
+        print(f"Output directory: {output_dir}")
+    
+    # Save summary report
+    summary_file = output_dir / "summary_report.txt"
+    with open(summary_file, 'w') as f:
+        f.write("FIRE for Your Dynasty - Analysis Summary\n")
+        f.write("=" * 45 + "\n\n")
+        f.write(f"Configuration:\n")
+        f.write(f"  Target Amount: {cfg.financial.target_amount:,.0f} {cfg.output.currency}\n")
+        f.write(f"  ROI Rate: {cfg.financial.roi_rate:.1%}\n")
+        f.write(f"  Retirement Age: {cfg.financial.retirement_age} years\n")
+        f.write(f"  Generation Gap: {cfg.financial.generation_gap} years\n\n")
+        
+        f.write(f"Key Results:\n")
+        f.write(f"  Single Child Investment: {single_investment:,.0f} {cfg.output.currency}\n")
+        if convergence["infinite_sum"]:
+            f.write(f"  Infinite Dynasty Cost: {convergence['infinite_sum']:,.0f} {cfg.output.currency}\n")
+        f.write(f"  Series Converges: {convergence['converges']}\n")
+        f.write(f"  Convergence Ratio: {convergence['convergence_ratio']:.4f}\n\n")
+        
+        f.write("Scenario Analysis:\n")
+        for children, result in results.items():
+            f.write(f"  {children} children per generation: {result['status']} - {result['cost']:,.0f} {cfg.output.currency}\n")
+    
+    if cfg.output.verbose:
+        print(f"Summary report saved to {summary_file}")
+
+    # Return results for programmatic use
+    return final_results
 
 
 if __name__ == "__main__":
