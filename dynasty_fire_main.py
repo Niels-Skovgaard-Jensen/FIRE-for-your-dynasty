@@ -49,8 +49,7 @@ def main(cfg: DictConfig) -> Optional[Dict[str, Any]]:
     single_investment = dynasty.calculate_single_child_investment()
     if cfg.output.verbose:
         print(f"Investment needed for one child: {single_investment:,.{cfg.output.decimal_places}f} {cfg.output.currency}")
-        print(f"That's only {single_investment / 1_000_000:.2f} million {cfg.output.currency}!")
-
+        
     # Multiple generations analysis
     if cfg.output.verbose:
         print("\nDynasty Analysis:")

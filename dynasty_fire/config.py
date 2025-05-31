@@ -40,9 +40,12 @@ class VisualizationConfig:
     figure_size: List[int] = field(
         default_factory=lambda: [12, 8]
     )  # Figure size for plots
+    dpi: int = 300                                                  # Resolution for saved plots
     show_plots: bool = True                                          # Whether to display plots
-    save_plots: bool = False                                         # Whether to save plots to file
+    save_plots: bool = True                                         # Whether to save plots to file
     output_dir: str = "output"                                       # Directory for saved plots
+    heatmap_resolution: int = 50                                     # Resolution for heatmap (grid points)
+    add_contours: bool = True                                        # Whether to add contour lines to heatmap
 
 
 @dataclass
