@@ -51,11 +51,11 @@ class TestDynastyFIRE:
     def test_dynasty_investment_single_generation(self, dynasty_calculator):
         """Test dynasty investment calculation for single generation"""
         total, breakdown = dynasty_calculator.calculate_dynasty_investment(1, 2.0)
-        
-        # For single generation (generation 0), we fund 2.0^0 = 1 person (the original)
+
+        # For single generation (generation 0), we fund k=2 children
         single_child = dynasty_calculator.calculate_single_child_investment()
-        expected_first_generation = single_child * 1.0  # 2.0^0 = 1
-        
+        expected_first_generation = single_child * 2.0  # First gen has k children
+
         assert abs(total - expected_first_generation) < 1e-6
         assert len(breakdown) == 1
         assert abs(breakdown[0] - expected_first_generation) < 1e-6

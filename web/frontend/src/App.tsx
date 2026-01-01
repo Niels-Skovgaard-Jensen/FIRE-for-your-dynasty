@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Dynasty FIRE Calculator</h1>
+        <h1>FIRE For Your Dynasty</h1>
         <p className="subtitle">
           Calculate how much to invest today for generational wealth
         </p>

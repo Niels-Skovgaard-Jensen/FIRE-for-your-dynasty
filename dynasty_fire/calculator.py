@@ -48,8 +48,8 @@ class DynastyFIRE:
         for n in range(generations):
             years_to_retirement = self.Y + n * self.Y_c
             investment_per_child = self.M / ((1 + self.R) ** years_to_retirement)
-            # Number of people in generation n (each previous generation has children_per_generation children)
-            people_in_generation = children_per_generation ** n
+            # Number of people in generation n: first generation has k children, each has k children, etc.
+            people_in_generation = children_per_generation ** (n + 1)
             generation_investment = investment_per_child * people_in_generation
             investments.append(generation_investment)
             total += generation_investment
@@ -87,13 +87,14 @@ class DynastyFIRE:
             years = self.Y + n * self.Y_c
             try:
                 # Check for potential overflow before calculation
-                term = children_per_generation**n
+                # First generation has k children, each subsequent has k more
+                term = children_per_generation ** (n + 1)
                 discount = (1 + self.R) ** years
-                
+
                 # Prevent overflow by checking if numbers are getting too large
                 if term > 1e100 or discount > 1e100:
                     break
-                    
+
                 investment = self.M * term / discount
                 
                 # Additional check for extremely large values
@@ -113,7 +114,8 @@ class DynastyFIRE:
         if converges:
             try:
                 # Sum = a / (1 - r) where a = first term, r = common ratio
-                a = self.M / ((1 + self.R) ** self.Y)
+                # First generation has k children, so first term is k * M / (1+R)^Y
+                a = children_per_generation * self.M / ((1 + self.R) ** self.Y)
                 r = children_per_generation / ((1 + self.R) ** self.Y_c)
                 
                 # Additional check: if r is very close to 1, the sum may be unstable

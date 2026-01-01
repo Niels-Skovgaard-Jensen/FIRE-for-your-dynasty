@@ -16,10 +16,12 @@ const sliderConfigs: SliderConfig[] = [
   {
     key: 'target_amount',
     label: 'Target Amount',
-    min: 1_000_000,
+    min: 100_000,
     max: 50_000_000,
-    step: 500_000,
-    format: (v, currency) => `${(v / 1_000_000).toFixed(1)}M ${currency}`,
+    step: 100_000,
+    format: (v, currency) => v >= 1_000_000
+      ? `${(v / 1_000_000).toFixed(1)}M ${currency}`
+      : `${(v / 1_000).toFixed(0)}K ${currency}`,
     usesCurrency: true,
   },
   {
@@ -33,7 +35,7 @@ const sliderConfigs: SliderConfig[] = [
   {
     key: 'retirement_age',
     label: 'Retirement Age',
-    min: 50,
+    min: 30,
     max: 90,
     step: 1,
     format: (v) => `${v} years`,
@@ -41,7 +43,7 @@ const sliderConfigs: SliderConfig[] = [
   {
     key: 'generation_gap',
     label: 'Generation Gap',
-    min: 15,
+    min: 18,
     max: 40,
     step: 1,
     format: (v) => `${v} years`,

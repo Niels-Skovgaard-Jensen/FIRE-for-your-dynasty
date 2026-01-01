@@ -52,7 +52,8 @@ export function GenerationsTable({ convergence, currency, childrenPerGeneration 
           </thead>
           <tbody>
             {investments.map((investment, index) => {
-              const people = Math.pow(childrenPerGeneration, index);
+              // First generation has k children, each subsequent has k more
+              const people = Math.pow(childrenPerGeneration, index + 1);
               return (
                 <tr key={index}>
                   <td className="gen-number">{index + 1}</td>
