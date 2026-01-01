@@ -29,6 +29,13 @@ uv run ruff format .
 
 # Lint code
 uv run ruff check .
+
+# Run web app (development)
+FLASK_APP=web.backend.app:app uv run flask run --port 5001  # Backend on :5001
+cd web/frontend && npm run dev                               # Frontend on :5173
+
+# Build web app for production
+cd web/frontend && npm run build
 ```
 
 ## Architecture
@@ -51,6 +58,17 @@ uv run ruff check .
 
 - **dynasty_fire_main.py** - Hydra-wrapped main function (`@hydra.main`). No YAML configs - uses structured configs from `config.py`
 - **dynasty_fire.py** - Legacy standalone analysis script
+
+### Web Application: `web/`
+
+- **backend/** - Flask API wrapping DynastyFIRE calculator
+  - `app.py` - Flask application factory with CORS
+  - `api/routes.py` - REST endpoints (`/api/v1/calculate`, `/api/v1/heatmap`)
+  - `services/calculator_service.py` - Wraps DynastyFIRE for API use
+- **frontend/** - React + TypeScript + Vite
+  - Interactive sliders for all parameters
+  - Plotly.js convergence heatmap (click to update params)
+  - Real-time calculation results display
 
 ### Configuration System
 
