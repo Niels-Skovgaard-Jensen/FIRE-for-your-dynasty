@@ -1,71 +1,41 @@
 import { useState } from 'react';
-import { useCalculator } from './hooks/useCalculator';
-import { ParameterSliders } from './components/ParameterSliders';
-import { ResultsDisplay } from './components/ResultsDisplay';
-import { ConvergenceHeatmap } from './components/ConvergenceHeatmap';
-import { GenerationsTable } from './components/GenerationsTable';
+import { IntroductionPage } from './components/IntroductionPage';
+import { CalculatorPage } from './components/CalculatorPage';
+
+type Tab = 'introduction' | 'calculator';
 
 function App() {
-  const [currency, setCurrency] = useState('DKK');
-  const {
-    params,
-    result,
-    heatmapData,
-    loading,
-    error,
-    updateParam,
-    setParamsFromHeatmapClick,
-  } = useCalculator();
+  const [activeTab, setActiveTab] = useState<Tab>('introduction');
 
   return (
     <div className="app">
       <header className="header">
         <h1>FIRE For Your Dynasty</h1>
         <p className="subtitle">
-          Calculate how much to invest today for generational wealth
+          Achieving generational wealth through compound interest
         </p>
+        <nav className="tab-navigation">
+          <button
+            className={`tab-button ${activeTab === 'introduction' ? 'active' : ''}`}
+            onClick={() => setActiveTab('introduction')}
+          >
+            Introduction
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'calculator' ? 'active' : ''}`}
+            onClick={() => setActiveTab('calculator')}
+          >
+            Calculator
+          </button>
+        </nav>
       </header>
 
       <main className="main">
-        <aside className="sidebar">
-          <ParameterSliders
-            params={params}
-            currency={currency}
-            onParamChange={updateParam}
-            onCurrencyChange={setCurrency}
-          />
-        </aside>
-
-        <section className="content">
-          <div className="top-row">
-            <div className="visualization">
-              <ConvergenceHeatmap
-                data={heatmapData}
-                currentRoi={params.roi_rate}
-                currentChildren={params.children_per_generation}
-                onPointClick={setParamsFromHeatmapClick}
-                loading={loading}
-              />
-            </div>
-
-            <div className="generations-panel">
-              <GenerationsTable
-                convergence={result?.convergence ?? null}
-                currency={currency}
-                childrenPerGeneration={params.children_per_generation}
-              />
-            </div>
-          </div>
-
-          <div className="results-section">
-            <ResultsDisplay
-              result={result}
-              loading={loading}
-              error={error}
-              currency={currency}
-            />
-          </div>
-        </section>
+        {activeTab === 'introduction' ? (
+          <IntroductionPage />
+        ) : (
+          <CalculatorPage />
+        )}
       </main>
 
       <footer className="footer">

@@ -52,22 +52,56 @@ body {
 .header .subtitle {
   opacity: 0.9;
   font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tab-button {
+  padding: 0.75rem 2rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.tab-button.active {
+  background: white;
+  color: var(--color-primary);
 }
 
 /* Main Layout */
 .main {
   flex: 1;
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
   padding: 2rem;
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;
 }
 
+/* Calculator Page Layout */
+.calculator-page {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+}
+
 @media (max-width: 1024px) {
-  .main {
+  .calculator-page {
     grid-template-columns: 1fr;
   }
 }
@@ -448,4 +482,109 @@ body {
   border-radius: 4px;
   font-family: 'SF Mono', Consolas, monospace;
   font-size: 0.85em;
+}
+
+/* Introduction Page */
+.introduction-page {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 3rem 4rem;
+  box-shadow: var(--shadow-md);
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .introduction-page {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.introduction-page h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.introduction-page p {
+  font-size: 1.1rem;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+}
+
+.introduction-page blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+.introduction-page em {
+  font-style: italic;
+  color: var(--color-primary-dark);
+}
+
+.introduction-page strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.introduction-page hr {
+  border: none;
+  border-top: 2px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+.introduction-page ol,
+.introduction-page ul {
+  margin: 1rem 0 1.5rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+.introduction-page li {
+  margin-bottom: 0.5rem;
+}
+
+.introduction-page ul ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Math formulas via KaTeX */
+.introduction-page .katex-display {
+  margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  text-align: center;
+}
+
+.introduction-page .katex-display .katex {
+  font-size: 1.4em;
+}
+
+.introduction-page .katex {
+  font-size: 1.2em;
+}
+
+.introduction-page p .katex {
+  font-size: 1.1em;
+}
+
+/* Code in Introduction */
+.introduction-page code {
+  background: var(--color-bg);
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 0.9em;
+  color: var(--color-primary-dark);
 }
