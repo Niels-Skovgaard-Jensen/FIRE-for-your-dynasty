@@ -1,83 +1,55 @@
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 
-const introductionContent = `
-The Financial Independence Retire Early (FIRE) movement has, for decades, sought to free itself of work by living frugally and investing a large share of its income to retire early and live off its invested savings. The most important factor in being able to FIRE is the number of years you have to compound your investments. Thus, an easy joke to make is "if only my grandfather had invested this money for me on the day I was born".
-
-This made me start thinking: How much money would I have to put down on the day my first child is born so they never have to think about retirement? As Einstein is famously misquoted as saying:
-
-> Compound interest is the strongest force in the universe
-
-and giving my potential future child the ability to invest from birth is something they could never achieve on their own.
-
-So let's say my child will need 2 million dollars for a comfortable retirement at age 65. They would never have to contribute towards this, the money would just be locked away when they are born in an international fund and then given to them on their 65th birthday. If we assume the average market return after inflation will be around 7%, as it has been historically, the amount of money I would have to put down would then be
-
-$$I_0 = \\frac{I_f}{(1 + R)^Y} = \\frac{2 \\times 10^{6}}{1.07^{65}} = 24,608 \\text{ USD}$$
-
-Not that bad! It is a lot of money, for sure, but not that much when you think of the security it would give to my child: they would never have to think about retirement, and never have to contribute towards it. Exponentials are really unintuitive, and it is impressive how much effect 65 years of compounding gives you. This is an interesting thought, but what if we took it a step further?
-
-## Going Generational
-
-What if I invested for my grandchildren? For them, compounding would have an even greater effect, so I'd need to invest much less. If my child has my grandchild at age 30, my investment would need to be:
-
-$$I_{\\text{grandchild}} = \\frac{2 \\times 10^{6}}{1.07^{65+30}} = 3,232 \\text{ USD}$$
-
-Now we are talking, this is not an insignificant amount of money, but it is definitely not a huge sum and it is only 13% of the money I needed before to secure retirement for my child. If we continue this thought on to my great-grandchild I would only need 425 dollars invested (1.7% of the money for my child).
-
-The sum is getting smaller and smaller for every increase in the number of generations, and thus the total amount of money to secure their retirement is *converging*, i.e. there exists a number which I could invest at the birth of my first child that would secure the retirement of all firstborns in my heritage in perpetuity. This we can generalise into the sum:
-
-$$\\frac{2 \\times 10^{6}}{1.07^{65+30}} + \\frac{2 \\times 10^{6}}{1.07^{65+60}} + \\frac{2 \\times 10^{6}}{1.07^{65+90}} + \\cdots = \\sum_{n=0}^{\\infty} \\frac{I_f}{(1+R)^{Y_r+Y_c \\cdot n}}$$
-
-Now, if we take this sum and set $N = \\infty$ (or a very large number), we will find the amount of money I would need to invest to secure the entire heritage of firstborns. Using the above numbers, this becomes:
-
-$$\\sum_{n=0}^{\\infty} \\frac{2 \\times 10^{6}}{(1+0.07)^{65+30n}} = 28,330 \\text{ USD}$$
-
-Of course, this is only part of the story. Statistically, I am likely to have more than one child. My children, their children, and so on are also likely to have more, so we introduce $k$ to be the average number of kids me and my offspring will have, and assume that it will be constant forever. Then the expression for the required initial investment will be:
-
-$$I_{\\text{total}} = \\sum_{n=0}^{\\infty} I_n = \\sum_{n=0}^{\\infty} \\frac{k^{n+1} \\cdot M}{(1 + R)^{Y + n \\cdot Y_c}}$$
-
-If we then factor out the constants which are not dependent on $n$:
-
-$$I_{\\text{total}} = \\frac{k \\cdot M}{(1 + R)^Y} \\sum_{n=0}^{\\infty} \\left(\\frac{k}{(1 + R)^{Y_c}}\\right)^n$$
-
-And let $r = \\frac{k}{(1 + R)^{Y_c}}$, then we get the geometric series:
-
-$$I_{\\text{total}} = \\frac{k \\cdot M}{(1 + R)^Y} \\sum_{n=0}^{\\infty} r^n$$
-
-The cool thing about geometric series in the form $\\sum_{n=0}^{\\infty} r^n$, is that they converge if and only if $|r| < 1$. Thus, our series will converge (meaning there exists an amount of money that can fulfill the infinite retirements), if and only if:
-
-$$\\frac{k}{(1 + R)^{Y_c}} < 1$$
-
-Thus if we assume that we have $k=2$ kids per generation, 30 years between each generation $Y_c=30$, and a return of 7% $R=0.07$ then our convergence test yields:
-
-$$\\frac{2}{(1 + 0.07)^{30}} = 0.26 < 1$$
-
-And there is an amount of money that could secure FIRE for your entire dynasty!
-
----
-
-## Key Insights
-
-1. In this simple model of investment return, we have identified that for certain setups *it is* possible to secure FIRE for all your future generations, achieving true generational wealth.
-
-2. There are only 3 factors that determine if it is possible:
-   - The average number of children per generation $k$
-   - The return on investment $R$
-   - The average generational gap between being born and having a child $Y_c$
-
-**Try it yourself with the calculator!** Adjust the parameters to see how different scenarios affect the feasibility of your dynasty's financial independence.
-`;
-
 export function IntroductionPage() {
+  const [content, setContent] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(import.meta.env.BASE_URL + 'introduction.md')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to load introduction');
+        }
+        return response.text();
+      })
+      .then((text) => {
+        setContent(text);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <article className="introduction-page">
+        <p>Loading...</p>
+      </article>
+    );
+  }
+
+  if (error) {
+    return (
+      <article className="introduction-page">
+        <p>Error: {error}</p>
+      </article>
+    );
+  }
+
   return (
     <article className="introduction-page">
       <ReactMarkdown
         remarkPlugins={[remarkMath]}
         rehypePlugins={[rehypeKatex]}
       >
-        {introductionContent}
+        {content}
       </ReactMarkdown>
     </article>
   );
