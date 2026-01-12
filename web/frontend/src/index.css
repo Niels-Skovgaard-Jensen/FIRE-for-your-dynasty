@@ -214,6 +214,78 @@ body {
   gap: 2rem;
 }
 
+.calculator-description {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--color-primary);
+}
+
+.calculator-description summary {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 1.05rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calculator-description summary::-webkit-details-marker {
+  display: none;
+}
+
+.calculator-description summary::before {
+  content: '▶';
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.calculator-description[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.calculator-description summary:hover {
+  color: var(--color-primary);
+}
+
+.calculator-description .description-content {
+  padding: 0 1.5rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.calculator-description p {
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+.calculator-description h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 1.25rem 0 0.5rem;
+}
+
+.calculator-description ul {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+
+.calculator-description li {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.calculator-description li strong {
+  color: var(--color-primary-dark);
+}
+
 /* Top Row - Heatmap + Generations Table */
 .top-row {
   display: grid;
@@ -484,6 +556,36 @@ body {
   font-size: 0.85em;
 }
 
+.footer-author {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-author span {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  color: var(--color-text-muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-links a:hover {
+  color: var(--color-primary);
+  transform: scale(1.1);
+}
+
 /* Introduction Page */
 .introduction-page {
   background: var(--color-surface);
@@ -559,8 +661,8 @@ body {
 
 /* Math formulas via KaTeX */
 .introduction-page .katex-display {
-  margin: 2rem 0;
-  padding: 1.5rem 2rem;
+  margin: 2.5rem 0;
+  padding: 2rem 2.5rem;
   background: var(--color-bg);
   border-radius: var(--radius-sm);
   overflow-x: auto;
@@ -568,15 +670,15 @@ body {
 }
 
 .introduction-page .katex-display .katex {
-  font-size: 1.4em;
+  font-size: 1.8em;
 }
 
 .introduction-page .katex {
-  font-size: 1.2em;
+  font-size: 1.5em;
 }
 
 .introduction-page p .katex {
-  font-size: 1.1em;
+  font-size: 1.3em;
 }
 
 /* Code in Introduction */

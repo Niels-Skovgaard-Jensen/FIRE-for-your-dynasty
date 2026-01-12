@@ -1,0 +1,19 @@
+/* KaTeX overrides - loaded after katex.min.css */
+.katex-display {
+  display: block !important;
+  text-align: center !important;
+  margin: 2.5rem 0 !important;
+  padding: 2rem !important;
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+}
+
+.katex-display > .katex {
+  text-align: center !important;
+  font-size: 1.8em !important;
+}
+
+.katex-display > .katex > .katex-html {
+  display: block !important;
+  text-align: center !important;
+}

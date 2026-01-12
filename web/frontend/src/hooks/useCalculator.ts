@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { debounce } from 'lodash-es';
-import { calculateDynasty, fetchHeatmapData } from '../services/api';
+import { calculateDynasty, generateHeatmapData } from '../services/calculator';
 import type {
   CalculatorParams,
   CalculatorResult,
@@ -26,24 +26,22 @@ export function useCalculator(initialParams: Partial<CalculatorParams> = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounced calculation (300ms delay for slider responsiveness)
+  // Debounced calculation (100ms delay - faster now since it's local)
   const debouncedCalculate = useMemo(
     () =>
-      debounce(async (p: CalculatorParams) => {
+      debounce((p: CalculatorParams) => {
         setLoading(true);
         setError(null);
         try {
-          const [calcResult, heatmap] = await Promise.all([
-            calculateDynasty(p),
-            fetchHeatmapData({
-              target_amount: p.target_amount,
-              retirement_age: p.retirement_age,
-              generation_gap: p.generation_gap,
-              roi_range: [0.02, 0.15],
-              children_range: [0.5, 6],
-              resolution: 40,
-            }),
-          ]);
+          const calcResult = calculateDynasty(p);
+          const heatmap = generateHeatmapData({
+            target_amount: p.target_amount,
+            retirement_age: p.retirement_age,
+            generation_gap: p.generation_gap,
+            roi_range: [0.02, 0.15],
+            children_range: [0.5, 6],
+            resolution: 80,
+          });
           setResult(calcResult);
           setHeatmapData(heatmap);
         } catch (e) {
@@ -51,7 +49,7 @@ export function useCalculator(initialParams: Partial<CalculatorParams> = {}) {
         } finally {
           setLoading(false);
         }
-      }, 300),
+      }, 100),
     []
   );
 
