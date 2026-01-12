@@ -45,13 +45,7 @@ export function ConvergenceHeatmap({
               [0, '#ef4444'],
               [1, '#22c55e'],
             ],
-            showscale: true,
-            colorbar: {
-              title: 'Converges',
-              titleside: 'right',
-              tickvals: [0, 1],
-              ticktext: ['No', 'Yes'],
-            },
+            showscale: false,
             hovertemplate:
               'ROI: %{x:.1f}%<br>Children: %{y:.1f}<br>Converges: %{z}<extra></extra>',
           },

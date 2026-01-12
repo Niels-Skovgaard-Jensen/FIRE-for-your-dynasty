@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>FIRE For Your Dynasty</h1>
+        <h1>Generational FIRE</h1>
         <p className="subtitle">
           Achieving generational wealth through compound interest
         </p>
@@ -43,7 +43,7 @@ function App() {
           <span>Created by Niels Skovgaard Jensen</span>
           <div className="social-links">
             <a
-              href="https://www.linkedin.com/in/niels-skovgaard-jensen/"
+              href="https://www.linkedin.com/in/n-s-j/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"

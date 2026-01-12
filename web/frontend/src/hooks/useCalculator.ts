@@ -8,10 +8,10 @@ import type {
 } from '../types/calculator';
 
 const DEFAULT_PARAMS: CalculatorParams = {
-  target_amount: 5_000_000,
+  target_amount: 2_000_000,
   roi_rate: 0.07,
-  retirement_age: 67,
-  generation_gap: 25,
+  retirement_age: 65,
+  generation_gap: 30,
   children_per_generation: 2.0,
   max_generations: 20,
 };
