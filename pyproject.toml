@@ -19,4 +19,4 @@ dependencies = [
 ]
 
 [project.scripts]
-dynasty-fire = "main:main"
+dynasty-fire = "dynasty_fire_main:main"

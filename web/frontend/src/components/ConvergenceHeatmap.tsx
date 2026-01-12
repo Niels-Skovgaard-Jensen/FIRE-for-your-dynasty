@@ -34,6 +34,8 @@ export function ConvergenceHeatmap({
     <div className="heatmap-container">
       <h2>Convergence Heatmap</h2>
       <Plot
+        style={{ width: '100%', height: '450px' }}
+        useResizeHandler={true}
         data={[
           // Main heatmap
           {
@@ -94,9 +96,8 @@ export function ConvergenceHeatmap({
             title: 'Children per Generation',
             gridcolor: '#e2e8f0',
           },
-          width: 600,
-          height: 500,
-          margin: { l: 60, r: 40, t: 40, b: 60 },
+          autosize: true,
+          margin: { l: 50, r: 20, t: 40, b: 50 },
           paper_bgcolor: 'rgba(0,0,0,0)',
           plot_bgcolor: 'rgba(0,0,0,0)',
           font: { family: 'system-ui, sans-serif' },

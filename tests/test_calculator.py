@@ -22,12 +22,12 @@ class TestDynastyFIRE:
     def test_single_child_investment_calculation(self, dynasty_calculator):
         """Test basic single child investment calculation"""
         result = dynasty_calculator.calculate_single_child_investment()
-        
+
         # Should be positive
         assert result > 0
-        
-        # Manual calculation: 10M / (1.07)^72
-        expected = 10_000_000 / (1.07 ** 72)
+
+        # Manual calculation using calculator's parameters: M / (1+R)^Y
+        expected = dynasty_calculator.M / ((1 + dynasty_calculator.R) ** dynasty_calculator.Y)
         assert abs(result - expected) < 1e-6
 
     def test_single_child_investment_edge_cases(self):
@@ -84,15 +84,15 @@ class TestDynastyFIRE:
     def test_convergence_analysis_convergent_case(self, dynasty_calculator):
         """Test convergence analysis for a case that should converge"""
         result = dynasty_calculator.convergence_analysis(children_per_generation=2.0)
-        
-        # Should converge with default parameters (2 children, 7% ROI, 25-year gap)
+
+        # Should converge with default parameters (2 children, 7% ROI, 30-year gap)
         assert result["converges"] is True
         assert result["convergence_ratio"] < 1
         assert result["infinite_sum"] is not None
         assert result["infinite_sum"] > 0
-        
-        # Check that convergence ratio matches manual calculation
-        expected_ratio = 2.0 / ((1.07) ** 25)
+
+        # Check that convergence ratio matches manual calculation using calculator's parameters
+        expected_ratio = 2.0 / ((1 + dynasty_calculator.R) ** dynasty_calculator.Y_c)
         assert abs(result["convergence_ratio"] - expected_ratio) < 1e-6
 
     def test_convergence_analysis_divergent_case(self, dynasty_calculator):
@@ -172,29 +172,29 @@ class TestDynastyFIRE:
         # For 1 child, boundary should be 0
         boundary = dynasty_calculator.calculate_convergence_boundary(1.0)
         assert boundary == 0.0
-        
+
         # For less than 1 child, boundary should be 0
         boundary = dynasty_calculator.calculate_convergence_boundary(0.5)
         assert boundary == 0.0
-        
+
         # For more than 1 child, boundary should be positive
         boundary = dynasty_calculator.calculate_convergence_boundary(2.0)
         assert boundary > 0
-        
-        # Manual calculation for 2 children with 25-year gap
-        # 2 = (1 + R)^25, so R = 2^(1/25) - 1
-        expected = 2.0**(1/25) - 1
+
+        # Manual calculation for 2 children using calculator's generation gap
+        # 2 = (1 + R)^Y_c, so R = 2^(1/Y_c) - 1
+        expected = 2.0 ** (1 / dynasty_calculator.Y_c) - 1
         assert abs(boundary - expected) < 1e-6
 
     def test_calculate_max_children_for_convergence(self, dynasty_calculator):
         """Test maximum children calculation"""
-        # With 7% ROI and 25-year gap
+        # With 7% ROI and calculator's generation gap
         max_children = dynasty_calculator.calculate_max_children_for_convergence(0.07)
-        
-        # Should equal (1.07)^25
-        expected = (1.07) ** 25
+
+        # Should equal (1.07)^Y_c
+        expected = (1.07) ** dynasty_calculator.Y_c
         assert abs(max_children - expected) < 1e-6
-        
+
         # Higher ROI should allow more children
         max_children_high = dynasty_calculator.calculate_max_children_for_convergence(0.10)
         assert max_children_high > max_children

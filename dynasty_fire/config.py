@@ -7,10 +7,10 @@ from typing import List
 @dataclass
 class FinancialConfig:
     """Financial parameters for dynasty analysis"""
-    target_amount: float = 10_000_000  # Target retirement amount in DKK
+    target_amount: float = 2_000_000  # Target retirement amount in USD
     roi_rate: float = 0.07            # Annual return on investment (7%)
-    retirement_age: float = 72        # Retirement age in years
-    generation_gap: float = 25        # Years between generations
+    retirement_age: float = 65        # Retirement age in years
+    generation_gap: float = 30        # Years between generations
 
 
 @dataclass
@@ -52,7 +52,7 @@ class VisualizationConfig:
 class OutputConfig:
     """Output settings"""
     verbose: bool = True              # Detailed output
-    currency: str = "DKK"            # Currency for display
+    currency: str = "USD"            # Currency for display
     decimal_places: int = 0          # Decimal places for currency display
 
 

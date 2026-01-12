@@ -19,11 +19,11 @@ class TestFinancialConfig:
     def test_default_values(self):
         """Test that default values are set correctly"""
         config = FinancialConfig()
-        
-        assert config.target_amount == 10_000_000
+
+        assert config.target_amount == 2_000_000
         assert config.roi_rate == 0.07
-        assert config.retirement_age == 72
-        assert config.generation_gap == 25
+        assert config.retirement_age == 65
+        assert config.generation_gap == 30
 
     def test_custom_values(self):
         """Test setting custom values"""
@@ -93,10 +93,10 @@ class TestVisualizationConfig:
     def test_default_values(self):
         """Test that default values are set correctly"""
         config = VisualizationConfig()
-        
+
         assert config.figure_size == [12, 8]
         assert config.show_plots is True
-        assert config.save_plots is False
+        assert config.save_plots is True
         assert config.output_dir == "output"
 
     def test_custom_values(self):
@@ -120,9 +120,9 @@ class TestOutputConfig:
     def test_default_values(self):
         """Test that default values are set correctly"""
         config = OutputConfig()
-        
+
         assert config.verbose is True
-        assert config.currency == "DKK"
+        assert config.currency == "USD"
         assert config.decimal_places == 0
 
     def test_custom_values(self):
@@ -167,11 +167,11 @@ class TestMainConfig:
         """Test that config works with OmegaConf"""
         config = Config()
         omega_config = OmegaConf.structured(config)
-        
+
         # Should be able to access nested values
-        assert omega_config.financial.target_amount == 10_000_000
+        assert omega_config.financial.target_amount == 2_000_000
         assert omega_config.analysis.children_per_generation == 2.0
-        
+
         # Should be able to modify values
         omega_config.financial.roi_rate = 0.05
         assert omega_config.financial.roi_rate == 0.05

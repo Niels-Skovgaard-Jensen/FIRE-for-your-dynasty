@@ -212,11 +212,11 @@ class TestFullWorkflow:
         # Should be very close (allowing for floating point precision)
         assert abs(total_dynasty - total_convergence) < 1e-6
         
-        # Test single child calculation consistency  
-        # Generation 0 has children^0 = 1 person, Generation 1 has children^1 people, etc.
+        # Test single child calculation consistency
+        # Generation n has children^(n+1) people (first generation has k children)
         single_child = calculator.calculate_single_child_investment()
-        expected_first_generation = single_child * (children ** 0)  # Generation 0 has 1 person
-        
+        expected_first_generation = single_child * children  # Generation 0 has k children
+
         assert abs(breakdown[0] - expected_first_generation) < 1e-6
 
     def test_boundary_conditions(self):

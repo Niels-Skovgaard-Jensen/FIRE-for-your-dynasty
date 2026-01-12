@@ -357,6 +357,7 @@ body {
   color: var(--color-text);
 }
 
+
 .heatmap-placeholder {
   height: 400px;
   display: flex;
@@ -733,4 +734,196 @@ body {
   font-family: 'SF Mono', Consolas, monospace;
   font-size: 0.9em;
   color: var(--color-primary-dark);
+}
+
+/* ==================== */
+/* Mobile Responsive    */
+/* ==================== */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+  .header {
+    padding: 1.5rem 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .header .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .tab-navigation {
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  /* Sidebar on mobile */
+  .sidebar {
+    position: static;
+    padding: 1rem;
+  }
+
+  .parameter-sliders h2 {
+    font-size: 1.1rem;
+  }
+
+  /* Heatmap container */
+  .heatmap-container {
+    min-height: 300px;
+  }
+
+  .heatmap-container h2 {
+    font-size: 1.1rem;
+  }
+
+  .heatmap-legend {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* Generations table */
+  .generations-table {
+    font-size: 0.8rem;
+  }
+
+  .generations-table th,
+  .generations-table td {
+    padding: 0.5rem 0.25rem;
+  }
+
+  /* Results */
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-card .value {
+    font-size: 1.2rem;
+  }
+
+  /* Calculator description */
+  .calculator-description summary {
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .calculator-description .description-content {
+    padding: 0 1rem 1rem;
+  }
+
+  .calculator-description p,
+  .calculator-description li {
+    font-size: 0.9rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Phone screens */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.25rem;
+  }
+
+  .header .subtitle {
+    font-size: 0.85rem;
+  }
+
+  .tab-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    flex: 1;
+    text-align: center;
+  }
+
+  .main {
+    padding: 0.75rem;
+  }
+
+  /* Sliders need more touch area */
+  .slider-group input[type="range"] {
+    height: 12px;
+  }
+
+  .slider-group input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .slider-value {
+    font-size: 0.85rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .slider-input {
+    width: 70px;
+    font-size: 0.85rem;
+  }
+
+  /* Introduction page mobile */
+  .introduction-page {
+    padding: 1.25rem 1rem;
+  }
+
+  .introduction-page h2 {
+    font-size: 1.35rem;
+  }
+
+  .introduction-page p {
+    font-size: 1rem;
+  }
+
+  .introduction-page blockquote {
+    font-size: 1rem;
+    padding-left: 1rem;
+  }
+
+  /* Math formulas - allow horizontal scroll */
+  .introduction-page .katex-display {
+    padding: 1rem;
+    margin: 1.5rem -1rem;
+    border-radius: 0;
+  }
+
+  .introduction-page .katex-display .katex {
+    font-size: 1.1em;
+  }
+
+  .introduction-page p .katex {
+    font-size: 1em;
+  }
+
+  /* Results cards */
+  .result-card {
+    padding: 1rem;
+  }
+
+  .result-card h3 {
+    font-size: 0.75rem;
+  }
+
+  .result-card .value {
+    font-size: 1.1rem;
+  }
+
+  /* Social links */
+  .social-links a svg {
+    width: 20px;
+    height: 20px;
+  }
 }
