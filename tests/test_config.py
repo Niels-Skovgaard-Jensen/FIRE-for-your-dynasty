@@ -1,6 +1,5 @@
 """Unit tests for the configuration module"""
 
-import pytest
 from omegaconf import OmegaConf
 
 from dynasty_fire.config import (
@@ -9,7 +8,7 @@ from dynasty_fire.config import (
     ScenariosConfig,
     VisualizationConfig,
     OutputConfig,
-    Config
+    Config,
 )
 
 
@@ -28,12 +27,9 @@ class TestFinancialConfig:
     def test_custom_values(self):
         """Test setting custom values"""
         config = FinancialConfig(
-            target_amount=5_000_000,
-            roi_rate=0.05,
-            retirement_age=65,
-            generation_gap=30
+            target_amount=5_000_000, roi_rate=0.05, retirement_age=65, generation_gap=30
         )
-        
+
         assert config.target_amount == 5_000_000
         assert config.roi_rate == 0.05
         assert config.retirement_age == 65
@@ -46,14 +42,14 @@ class TestAnalysisConfig:
     def test_default_values(self):
         """Test that default values are set correctly"""
         config = AnalysisConfig()
-        
+
         assert config.max_generations == 20
         assert config.children_per_generation == 2.0
 
     def test_fractional_children(self):
         """Test that fractional children are supported"""
         config = AnalysisConfig(children_per_generation=2.5)
-        
+
         assert config.children_per_generation == 2.5
         assert isinstance(config.children_per_generation, float)
 
@@ -64,7 +60,7 @@ class TestScenariosConfig:
     def test_default_values(self):
         """Test that default values are set correctly"""
         config = ScenariosConfig()
-        
+
         assert config.children_options == [1.0, 2.0, 3.0, 4.0]
         assert config.roi_range == [0.03, 0.12]
         assert config.gap_range == [15.0, 35.0]
@@ -73,16 +69,13 @@ class TestScenariosConfig:
         """Test setting custom children options"""
         custom_options = [1.0, 1.5, 2.0, 2.5, 3.0]
         config = ScenariosConfig(children_options=custom_options)
-        
+
         assert config.children_options == custom_options
 
     def test_custom_ranges(self):
         """Test setting custom ranges"""
-        config = ScenariosConfig(
-            roi_range=[0.02, 0.15],
-            gap_range=[10.0, 40.0]
-        )
-        
+        config = ScenariosConfig(roi_range=[0.02, 0.15], gap_range=[10.0, 40.0])
+
         assert config.roi_range == [0.02, 0.15]
         assert config.gap_range == [10.0, 40.0]
 
@@ -105,9 +98,9 @@ class TestVisualizationConfig:
             figure_size=[16, 10],
             show_plots=False,
             save_plots=True,
-            output_dir="custom_output"
+            output_dir="custom_output",
         )
-        
+
         assert config.figure_size == [16, 10]
         assert config.show_plots is False
         assert config.save_plots is True
@@ -127,12 +120,8 @@ class TestOutputConfig:
 
     def test_custom_values(self):
         """Test setting custom output options"""
-        config = OutputConfig(
-            verbose=False,
-            currency="USD",
-            decimal_places=2
-        )
-        
+        config = OutputConfig(verbose=False, currency="USD", decimal_places=2)
+
         assert config.verbose is False
         assert config.currency == "USD"
         assert config.decimal_places == 2
@@ -144,7 +133,7 @@ class TestMainConfig:
     def test_default_initialization(self):
         """Test that main config initializes with all sub-configs"""
         config = Config()
-        
+
         assert isinstance(config.financial, FinancialConfig)
         assert isinstance(config.analysis, AnalysisConfig)
         assert isinstance(config.scenarios, ScenariosConfig)
@@ -155,9 +144,9 @@ class TestMainConfig:
         """Test setting custom sub-configurations"""
         financial = FinancialConfig(target_amount=1_000_000)
         analysis = AnalysisConfig(max_generations=10)
-        
+
         config = Config(financial=financial, analysis=analysis)
-        
+
         assert config.financial.target_amount == 1_000_000
         assert config.analysis.max_generations == 10
         # Others should use defaults
@@ -180,11 +169,11 @@ class TestMainConfig:
         """Test that config enforces correct types"""
         config = Config()
         omega_config = OmegaConf.structured(config)
-        
+
         # Should accept valid types
         omega_config.financial.target_amount = 5_000_000.0
         omega_config.analysis.children_per_generation = 2.5
-        
+
         # Should handle type conversion for compatible types
         omega_config.output.decimal_places = 2  # int should work
         assert omega_config.output.decimal_places == 2
@@ -192,14 +181,14 @@ class TestMainConfig:
     def test_nested_config_modification(self):
         """Test modifying nested configuration values"""
         config = Config()
-        
+
         # Modify financial config
         config.financial.roi_rate = 0.08
         config.financial.generation_gap = 20
-        
-        # Modify analysis config  
+
+        # Modify analysis config
         config.analysis.children_per_generation = 1.5
-        
+
         # Verify changes
         assert config.financial.roi_rate == 0.08
         assert config.financial.generation_gap == 20
@@ -210,14 +199,14 @@ class TestMainConfig:
         original_config = Config()
         original_config.financial.target_amount = 8_000_000
         original_config.scenarios.children_options = [1.0, 1.5, 2.0]
-        
+
         # Convert to OmegaConf and serialize
         omega_config = OmegaConf.structured(original_config)
         yaml_str = OmegaConf.to_yaml(omega_config)
-        
+
         # Deserialize
         restored_config = OmegaConf.create(yaml_str)
-        
+
         # Verify values are preserved
         assert restored_config.financial.target_amount == 8_000_000
         assert restored_config.scenarios.children_options == [1.0, 1.5, 2.0]

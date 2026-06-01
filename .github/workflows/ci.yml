@@ -1,0 +1,76 @@
+name: CI
+
+# Validation pipeline for pull requests and feature branches.
+# Runs the Python tests, type-checks/builds the frontend, and lints the
+# codebase. The deploy workflow (deploy.yml) handles publishing on `main`.
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Run test suite
+        run: uv run pytest
+
+  frontend:
+    name: Frontend type-check & build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: web/frontend
+        run: npm ci
+
+      # `npm run build` runs `tsc` (type-check) and then `vite build`,
+      # so a green build proves the production bundle compiles.
+      - name: Build
+        working-directory: web/frontend
+        run: npm run build
+
+  lint:
+    name: Ruff lint (informational)
+    runs-on: ubuntu-latest
+    # Pre-existing lint findings should surface but not block merges/deploys.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Ruff check
+        run: uvx ruff check .
+
+      - name: Ruff format check
+        run: uvx ruff format --check .

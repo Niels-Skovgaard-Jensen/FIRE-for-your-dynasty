@@ -1,5 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Production deployment pipeline.
+# On every push to `main`, the Python test suite runs first; only if it
+# passes is the frontend built and published to GitHub Pages.
+
 on:
   push:
     branches: [main]
@@ -10,13 +14,31 @@ permissions:
   pages: write
   id-token: write
 
+# Allow one concurrent deployment; never cancel an in-progress publish.
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  test:
+    name: Python tests
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Run test suite
+        run: uv run pytest
+
+  build:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,6 +67,7 @@ jobs:
           path: web/frontend/dist
 
   deploy:
+    name: Deploy to Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
