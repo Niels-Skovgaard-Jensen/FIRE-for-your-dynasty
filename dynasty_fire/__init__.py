@@ -2,11 +2,11 @@
 
 from .config import (
     FinancialConfig,
-    AnalysisConfig, 
+    AnalysisConfig,
     ScenariosConfig,
     VisualizationConfig,
     OutputConfig,
-    Config
+    Config,
 )
 from .calculator import DynastyFIRE
 from .visualizer import DynastyVisualizer
@@ -14,11 +14,11 @@ from .visualizer import DynastyVisualizer
 __version__ = "0.1.0"
 __all__ = [
     "FinancialConfig",
-    "AnalysisConfig", 
+    "AnalysisConfig",
     "ScenariosConfig",
     "VisualizationConfig",
     "OutputConfig",
     "Config",
     "DynastyFIRE",
-    "DynastyVisualizer"
+    "DynastyVisualizer",
 ]
