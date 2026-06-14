@@ -43,14 +43,14 @@ When this condition is met, a finite investment today can fund retirement for al
 
 ```
 ├── web/frontend/          # React + TypeScript web app (fully client-side)
+│   └── public/introduction.md  # Detailed mathematical explanation
 ├── dynasty_fire/          # Python calculator library
 │   ├── calculator.py      # Core DynastyFIRE class
 │   ├── config.py          # Configuration dataclasses
 │   ├── visualizer.py      # Matplotlib plots
 │   └── utils.py           # Formatting utilities
 ├── dynasty_fire_main.py   # Hydra CLI entry point
-├── tests/                 # Pytest test suite
-└── Introduction.md        # Detailed mathematical explanation
+└── tests/                 # Pytest test suite
 ```
 
 ## Development
