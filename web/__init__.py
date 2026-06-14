@@ -1,1 +1,0 @@
-"""Dynasty FIRE Web Application"""

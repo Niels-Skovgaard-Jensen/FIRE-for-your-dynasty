@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { IntroductionPage } from './components/IntroductionPage';
 import { CalculatorPage } from './components/CalculatorPage';
 
-type Tab = 'introduction' | 'calculator';
+type Tab = 'blog' | 'calculator';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('introduction');
+  const [activeTab, setActiveTab] = useState<Tab>('calculator');
 
   return (
     <div className="app">
@@ -16,10 +16,10 @@ function App() {
         </p>
         <nav className="tab-navigation">
           <button
-            className={`tab-button ${activeTab === 'introduction' ? 'active' : ''}`}
-            onClick={() => setActiveTab('introduction')}
+            className={`tab-button ${activeTab === 'blog' ? 'active' : ''}`}
+            onClick={() => setActiveTab('blog')}
           >
-            Introduction
+            Blog
           </button>
           <button
             className={`tab-button ${activeTab === 'calculator' ? 'active' : ''}`}
@@ -31,7 +31,7 @@ function App() {
       </header>
 
       <main className="main">
-        {activeTab === 'introduction' ? (
+        {activeTab === 'blog' ? (
           <IntroductionPage />
         ) : (
           <CalculatorPage />
