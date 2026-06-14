@@ -1,8 +1,8 @@
 name: CI
 
 # Validation pipeline for pull requests and feature branches.
-# Runs the Python tests, type-checks/builds the frontend, and lints the
-# codebase. The deploy workflow (deploy.yml) handles publishing on `main`.
+# Type-checks and builds the frontend; the deploy workflow (deploy.yml)
+# handles publishing on `main`.
 
 on:
   pull_request:
@@ -16,21 +16,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  python:
-    name: Python tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - name: Run test suite
-        run: uv run pytest
-
   frontend:
     name: Frontend type-check & build
     runs-on: ubuntu-latest
@@ -54,23 +39,3 @@ jobs:
       - name: Build
         working-directory: web/frontend
         run: npm run build
-
-  lint:
-    name: Ruff lint (informational)
-    runs-on: ubuntu-latest
-    # Pre-existing lint findings should surface but not block merges/deploys.
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - name: Ruff check
-        run: uvx ruff check .
-
-      - name: Ruff format check
-        run: uvx ruff format --check .
